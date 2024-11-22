@@ -1,0 +1,43 @@
+{% extends 'myapp/main.html' %}
+{% block title %} Category | {{ name }} {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ collection.name }}</h1>
+
+    <!-- Filter Form -->
+    <form method="get" action="" class="mb-4">
+        <label for="price">Price Range:</label>
+        <select name="price" id="price" class="form-select" onchange="this.form.submit()">
+            <option value="">All</option>
+            <option value="0-500">₹0 - ₹500</option>
+            <option value="500-1000">₹500 - ₹1000</option>
+            <option value="1000-5000">₹1000 - ₹5000</option>
+            <option value="5000+">₹5000+</option>
+        </select>
+    </form>
+
+    <div class="row">
+        <!-- Loop through the products -->
+        {% for product in products %}
+        <div class="col-md-2 mb-4">
+            <!-- Make the product clickable by wrapping the card in an anchor tag -->
+            <a href="{% url 'product_details' product.id %}" class="text-decoration-none">
+
+                <div class="card h-100">
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 220px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                    </div>
+                    <div class="card-footer">
+                        <span class="text-success h5">₹{{ product.selling_price }}</span>
+                        <del class="text-muted">₹{{ product.original_price }}</del>
+                        <span class="badge bg-success float-end">{{ product.discount|floatformat:2 }}% Off</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

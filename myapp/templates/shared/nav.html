@@ -1,0 +1,78 @@
+<nav class="navbar navbar-expand-lg navbar-custom bg-dark shadow-sm">
+    <div class="container-fluid">
+        <!-- Left: Title -->
+        <a class="navbar-brand text-light fw-bold" href="#">MyAppTitle</a>
+
+        <!-- Hamburger Button (Right Corner) -->
+        <button class="navbar-toggler ms-auto text-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Right: Links (Collapsible) -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link text-light fw-semibold active" aria-current="page" href="{% url 'collections' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fw-semibold" href="{% url 'log' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fw-semibold" href="{% url 'order_success' %}">Your Orders</a>
+                </li>
+                <li class="nav-item">
+                    <!-- Cart link with icon -->
+                    <a class="nav-link position-relative text-light fw-semibold" href="{% url 'cart_views' %}">
+                        <i class="fas fa-shopping-cart"></i> Cart
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Search Bar -->
+            <form class="d-flex me-3" action="{% url 'search_products' %}" method="get">
+                <input class="form-control me-2 rounded-pill border-0 shadow-sm" type="search" placeholder="Search products..." aria-label="Search" name="q" required>
+                <button class="btn btn-outline-success rounded-pill px-3 shadow-sm" type="submit">Search</button>
+            </form>
+            
+            <!-- Right Corner: Username if logged in -->
+            {% if user.is_authenticated %}
+            <span class="navbar-text text-light fw-bold ms-auto">Hello, {{ user.username }}</span>
+            <a class="nav-link text-light d-inline fw-semibold" href="{% url 'logoutt' %}">Logout</a>
+            {% else %}
+            <a class="nav-link text-light fw-semibold ms-auto" href="#">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<!-- Add this to your CSS -->
+<style>
+.navbar-custom {
+    background: linear-gradient(45deg, #6a11cb, #2575fc); /* Modern gradient background */
+    padding: 0.7rem 1rem;
+    border-radius: 5px;
+}
+
+.navbar-toggler-icon {
+    background-color: white;
+    border-radius: 3px;
+}
+
+.nav-link:hover {
+    color: #ffcc00 !important; /* Hover effect for links */
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar-brand:hover {
+    color: #ffcc00 !important; /* Hover effect for brand */
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar-text {
+    margin-left: 10px;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+</style>

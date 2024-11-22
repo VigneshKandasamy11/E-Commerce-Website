@@ -1,0 +1,142 @@
+{% extends 'myapp/main.html' %}
+{% load cart_extras %}
+
+{% block title %}Order Success{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Success Message -->
+    <div class="text-center mb-4">
+        <h2 class="text-success fw-bold"><i class="fas fa-check-circle"></i> Order Successful!</h2>
+        <p class="text-muted">Thank you for your purchase! Below are the details of your order.</p>
+    </div>
+
+    {% for order in orders %}
+    <div class="card mb-5 shadow-lg border-0">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center border-bottom">
+            <h4 class="text-secondary m-0">Order #{{ order.id }}</h4>
+            <div>
+                <small class="text-muted">Placed on {{ order.created_at|date:"d M Y" }}</small>
+                {% if order.status == "canceled" %}
+                <span class="badge bg-danger ms-3">Cancelled</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card-body">
+            <!-- Order Summary -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h6 class="fw-bold">Delivery Address:</h6>
+                    <p class="text-muted">{{ order.address }}</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h6 class="fw-bold">Total Price:</h6>
+                    <h5 class="text-danger">₹{{ order.total_price }}</h5>
+                </div>
+            </div>
+
+            <!-- Ordered Items -->
+            <h5 class="text-secondary mb-3"><i class="fas fa-box"></i> Ordered Items</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="bg-success text-white">
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr class="{% if item.status == 'canceled' %}table-danger{% endif %}">
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>₹{{ item.price }}</td>
+                            <td>₹{{ item.total_price|floatformat:2 }}</td>
+                            <td class="text-center">
+                                {% if item.status != "canceled" %}
+                                <a href="{% url 'cancel_order_item' order.id item.id %}" class="btn btn-outline-danger btn-sm">
+                                    Cancel Item
+                                </a>
+                                {% else %}
+                                <span class="badge bg-danger">Canceled</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer with Continue Shopping Button -->
+        <div class="card-footer text-center bg-light">
+            <a href="{% url 'collections' %}" class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm">
+                <i class="fas fa-shopping-cart"></i> Continue Shopping
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Styling -->
+<style>
+/* Card Styling */
+.card {
+    border-radius: 10px;
+}
+
+.card-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: #f8f9fa;
+}
+
+.card-footer {
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Table Styling */
+.table {
+    border-collapse: collapse;
+}
+
+.table thead th {
+    background: #28a745 !important;
+    color: white;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.table-danger {
+    background: rgba(220, 53, 69, 0.1);
+}
+
+/* Buttons */
+.btn {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card-header {
+        text-align: center;
+    }
+
+    .col-md-6.text-md-end {
+        text-align: center !important;
+    }
+}
+</style>
+{% endblock %}

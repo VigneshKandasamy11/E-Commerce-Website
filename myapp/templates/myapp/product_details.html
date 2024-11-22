@@ -1,0 +1,116 @@
+{% extends 'myapp/main.html' %}
+
+{% block title %} {{ product.name }} | Details {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row align-items-center">
+        <!-- Product Image Section -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img-top rounded"
+                    style="width: 100%; height: auto; max-height: 500px; object-fit: contain;">
+            </div>
+        </div>
+
+        <!-- Product Details Section -->
+        <div class="col-md-6">
+            <h1 class="fw-bold text-primary">{{ product.name }}</h1>
+            <p class="text-secondary mb-3">{{ product.description }}</p>
+
+            <h4 class="text-success fw-bold">₹{{ product.selling_price }}</h4>
+            <del class="text-muted">₹{{ product.original_price }}</del>
+            <span class="badge bg-success ms-2">{{ product.get_discount|floatformat:2 }}% Off</span>
+
+            <!-- Divider -->
+            <hr class="my-4">
+
+            <!-- Quantity Selection -->
+            <form method="POST" action="{% url 'product_details' product.id %}">
+                {% csrf_token %}
+                <div class="mt-4">
+                    <label for="quantity" class="form-label fw-semibold">Select Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1" max="10" 
+                           class="form-control border-primary rounded-pill shadow-sm"
+                           style="width: 120px;">
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-4 d-flex align-items-center">
+                    <button type="submit" name="act" value="add_to_cart" 
+                            class="btn btn-primary btn-lg rounded-pill px-5 me-3 shadow-sm">
+                        <i class="fas fa-cart-plus"></i> Add to Cart
+                    </button>
+
+                    <!-- Uncomment Buy Now Button if needed -->
+                    <!-- 
+                    <button type="submit" name="act" value="buy_now" 
+                            class="btn btn-success btn-lg rounded-pill px-5 shadow-sm">
+                        <i class="fas fa-bolt"></i> Buy Now
+                    </button> 
+                    -->
+                </div>
+            </form>
+
+            <!-- Additional Info -->
+            <div class="mt-4">
+                <small class="text-muted">
+                    Free delivery on orders over ₹500. <br>
+                    <i class="fas fa-check-circle text-success"></i> 7-Day Return Policy
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add CSS for styling -->
+<style>
+/* Product Image Styling */
+.card-img-top {
+    border-radius: 10px;
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+    object-fit: contain;
+    max-height: 500px;
+}
+
+/* Title and Text Enhancements */
+h1 {
+    font-size: 2.5rem;
+}
+
+.text-secondary {
+    font-size: 1rem;
+}
+
+/* Form Styling */
+input[type="number"] {
+    font-size: 1.1rem;
+    text-align: center;
+    border-width: 2px;
+}
+
+button {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .card-img-top {
+        max-height: 300px;
+    }
+
+    input[type="number"] {
+        width: 100px;
+    }
+}
+</style>
+{% endblock %}
